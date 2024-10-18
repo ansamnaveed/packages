@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl_phone_field/app_text_field.dart';
 import 'package:intl_phone_field/countries.dart';
+import 'package:intl_phone_field/helpers.dart';
 
 class PickerDialogStyle {
   final Color? backgroundColor;
@@ -99,7 +101,7 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.all(24),
+              padding: EdgeInsets.fromLTRB(0, 15, 24, 10),
               child: Text(
                 'Select Country/Region',
                 style: TextStyle(
@@ -107,6 +109,19 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
                   fontSize: 18,
                 ),
               ),
+            ),
+            appField(
+              hint: 'Search Country/Region',
+              context: context,
+              onChange: (value) {
+                _filteredCountries = widget.countryList.stringSearch(value!)
+                  ..sort(
+                    (a, b) => a
+                        .localizedName(widget.languageCode)
+                        .compareTo(b.localizedName(widget.languageCode)),
+                  );
+                if (mounted) setState(() {});
+              },
             ),
             // Padding(
             //   padding:
@@ -118,18 +133,17 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
             //           suffixIcon: const Icon(Icons.search),
             //           // labelText: widget.searchText,
             //         ),
-            //     onChanged: (value) {
-            //       _filteredCountries = widget.countryList.stringSearch(value)
-            //         ..sort(
-            //           (a, b) => a
-            //               .localizedName(widget.languageCode)
-            //               .compareTo(b.localizedName(widget.languageCode)),
-            //         );
-            //       if (mounted) setState(() {});
-            //     },
+            // onChanged: (value) {
+            //   _filteredCountries = widget.countryList.stringSearch(value)
+            //     ..sort(
+            //       (a, b) => a
+            //           .localizedName(widget.languageCode)
+            //           .compareTo(b.localizedName(widget.languageCode)),
+            //     );
+            //   if (mounted) setState(() {});
+            // },
             //   ),
             // ),
-            // const SizedBox(height: 20),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
